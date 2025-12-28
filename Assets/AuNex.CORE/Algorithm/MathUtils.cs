@@ -26,9 +26,9 @@ namespace AuNex
             /// </summary>
             /// <param name="rad"></param>
             /// <returns>Quaternion</returns>
-            public static Quaternion ToQuat(float rad)
+            public static Quaternion ToQuatUnity(float rad)
             {
-                return Quaternion.Euler(0, 0, rad * Mathf.Rad2Deg);
+                return Quaternion.Euler(0, rad* Mathf.Rad2Deg, 0);
             }
 
             /// <summary>
@@ -52,9 +52,9 @@ namespace AuNex
             /// </summary>
             /// <param name="quat"></param>
             /// <returns>ラジアン</returns>
-            public static float toRad(Quaternion quat)
+            public static float toRadUnity(Quaternion quat)
             {
-                return quat.eulerAngles.z * Mathf.Deg2Rad;
+                return quat.eulerAngles.y * Mathf.Deg2Rad;
             }
         }
     }
