@@ -13,22 +13,22 @@ namespace AuNex
             /// </summary>
             /// <param name="scan">LaserScanメッセージ</param>
             /// <returns>2Dポイントクラウド</returns>
-            public static List<Vector2> LaserScanToPointCloud(sensor_msgs.msg.LaserScan scan)
+            public static void LaserScanToPointCloud(sensor_msgs.msg.LaserScan scan, ref List<Vector2> pointCloud)
             {
-                List<Vector2> pointCloud = new List<Vector2>();
+                pointCloud.Clear();
                 float angle = scan.Angle_min;
                 for (int i = 0; i < scan.Ranges.Length; i++)
                 {
                     float range = scan.Ranges[i];
                     if (range >= scan.Range_min && range <= scan.Range_max)
                     {
-                        float x = range * Mathf.Cos(angle);
-                        float y = range * Mathf.Sin(angle);
-                        pointCloud.Add(new Vector2(x, y));
+                        pointCloud[i] = new Vector2(
+                            range * Mathf.Cos(angle),
+                            range * Mathf.Sin(angle)
+                        );
                     }
                     angle += scan.Angle_increment;
                 }
-                return pointCloud;
             }
         }
     }
