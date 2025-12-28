@@ -12,7 +12,7 @@ namespace AuNex
     namespace Localization
     {
         public class IterativeClosestPoint
-        {
+        {   
             private Vector2 position;
             private Matrix<double> rotation;
             private KdTree targetKdTree;
@@ -63,7 +63,7 @@ namespace AuNex
 
                     Matrix<double> dR = Matrix<double>.Build.DenseIdentity(2);
                     Vector2 dt = Vector2.zero;
-                    estimateTransformation(transformedPoints, correspondences, ref dR, ref dt);
+                    EstimateTransformation(transformedPoints, correspondences, ref dR, ref dt);
 
                     rotation = dR * rotation;
                     position += dt;
@@ -89,7 +89,7 @@ namespace AuNex
                 return rotation;
             }
 
-            private void estimateTransformation(List<Vector2> sourcePoints, List<Vector2> targetPoints, ref Matrix<double> R, ref Vector2 t)
+            private void EstimateTransformation(List<Vector2> sourcePoints, List<Vector2> targetPoints, ref Matrix<double> R, ref Vector2 t)
             {
                 int N = sourcePoints.Count;
                 if(N == 0 || targetPoints.Count == 0)
