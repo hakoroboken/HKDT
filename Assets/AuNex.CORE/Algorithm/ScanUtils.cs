@@ -15,17 +15,13 @@ namespace AuNex
             /// <returns>2Dポイントクラウド</returns>
             public static void LaserScanToPointCloud(sensor_msgs.msg.LaserScan scan, ref List<Vector2> pointCloud)
             {
-                pointCloud.Clear();
                 float angle = scan.Angle_min;
                 for (int i = 0; i < scan.Ranges.Length; i++)
                 {
                     float range = scan.Ranges[i];
                     if (range >= scan.Range_min && range <= scan.Range_max)
                     {
-                        pointCloud[i] = new Vector2(
-                            range * Mathf.Cos(angle),
-                            range * Mathf.Sin(angle)
-                        );
+                        pointCloud.Add(new Vector2(range * Mathf.Cos(angle), range * Mathf.Sin(angle)));
                     }
                     angle += scan.Angle_increment;
                 }
