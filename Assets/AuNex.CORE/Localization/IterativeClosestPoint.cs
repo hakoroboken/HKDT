@@ -224,8 +224,17 @@ namespace AuNex
                             cos * p.x - sin * p.y + position.x,
                             sin * p.x + cos * p.y + position.y
                         );
+
+                        // ICPの進行に応じて対応点探索の最大距離を減少
+                        float max_dist_coef = (float)iter / (float)maxIterations;
+                        float max_dist = 0.0f;
+                        if(max_dist_coef < 0.25)max_dist = maxDistance;
+                        else if(max_dist_coef < 0.5)max_dist = maxDistance * 0.75f;
+                        else if(max_dist_coef < 0.75)max_dist = maxDistance * 0.5f;
+                        else max_dist = maxDistance * 0.25f;
+
                         // 最近傍点を探索
-                        if(spatialHash.FindNearest(rotated, maxDistance, out var nearestPoint))
+                        if(spatialHash.FindNearest(rotated, max_dist, out var nearestPoint))
                         {
                             srcCorr.Add(rotated);
                             tgtCorr.Add(nearestPoint);
