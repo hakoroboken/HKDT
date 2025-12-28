@@ -5,6 +5,7 @@ using UnityEngine;
 using AuNex.Algorithm;
 
 using MathNet.Numerics.LinearAlgebra;
+using System;
 
 namespace AuNex
 {
@@ -62,21 +63,19 @@ namespace AuNex
 
                     Matrix<double> dR = Matrix<double>.Build.DenseIdentity(2);
                     Vector2 dt = Vector2.zero;
-                    estimateTransformation(sourcePoints, correspondences, ref dR, ref dt);
+                    estimateTransformation(transformedPoints, correspondences, ref dR, ref dt);
 
                     rotation = dR * rotation;
                     position += dt;
 
                     float delta_trans = dt.magnitude;
-                    double delta_rot = System.Math.Acos(System.Math.Min(1.0, System.Math.Max(-1.0, (dR[0, 0] + dR[1, 1] - 1) / 2.0)));
+                    double delta_rot = Math.Abs(Math.Atan2(dR[1, 0], dR[0, 0]));
 
                     if (delta_trans < tolerance && delta_rot < tolerance)
                     {
                         return true;
                     }
                 }
-
-                Debug.LogWarning("ICPが最大反復回数に達しましたが、収束しませんでした。");
                 return false;
             }
 
