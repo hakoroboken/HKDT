@@ -13,6 +13,7 @@ public class DifferentialDriver : MonoBehaviour
     public String posture_topic_name = "/robot_posture";
     public ArticulationBody leftWheel;
     public ArticulationBody rightWheel;
+    public GameObject robotBody;
 
 
     private ROS2UnityComponent ros2Unity;
@@ -56,7 +57,7 @@ public class DifferentialDriver : MonoBehaviour
         rightWheel.SetDriveTargetVelocity(ArticulationDriveAxis.X, right_wheel_velocity);
 
         geometry_msgs.msg.Quaternion posture_msg = new geometry_msgs.msg.Quaternion();
-        Quaternion posture = transform.rotation;
+        Quaternion posture = robotBody.transform.rotation;
         posture_msg.X = posture.x;
         posture_msg.Y = posture.y;
         posture_msg.Z = posture.z;
