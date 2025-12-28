@@ -78,12 +78,17 @@ public class IcpExample : MonoBehaviour
                 ProcessPosture
             );
         }
+
+        // オドメトリのゲームオブジェクトを更新（デバッグ用）
+        odometry.transform.position = new Vector3((float)translation_.x, 0.2f, (float)translation_.y);
+        odometry.transform.rotation = MathUtils.ToQuat(rotation_);
     }
 
     void ProcessScan(sensor_msgs.msg.LaserScan msg)
     {
         // レーザースキャンを点群に変換
-        List<Vector2> scan_points = ScanUtils.LaserScanToPointCloud(msg);
+        List<Vector2> scan_points = new(msg.Ranges.Length);
+        ScanUtils.LaserScanToPointCloud(msg, ref scan_points);
 
         if(!is_initialized)
         {
@@ -108,12 +113,7 @@ public class IcpExample : MonoBehaviour
         {
             Debug.LogWarning("ICPが収束しませんでした。");
             return;
-        }
-
-        // オドメトリのゲームオブジェクトを更新（デバッグ用）
-        odometry.transform.position = translation_;
-        odometry.transform.rotation = MathUtils.ToQuat(rotation_);
-        
+        }        
     }
 
     void ProcessPosture(geometry_msgs.msg.Quaternion msg)
