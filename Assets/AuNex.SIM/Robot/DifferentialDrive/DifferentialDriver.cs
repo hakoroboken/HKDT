@@ -7,7 +7,7 @@ using System;
 
 public class DifferentialDriver : MonoBehaviour
 {
-    public String node_name = "differential_drive_node";
+    public String node_name = "diff_bot_node";
     public String left_topic_name = "/left_wheel_velocity";
     public String right_topic_name = "/right_wheel_velocity";
     public String posture_topic_name = "/robot_posture";

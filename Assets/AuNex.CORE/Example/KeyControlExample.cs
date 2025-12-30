@@ -4,7 +4,6 @@ using UnityEngine;
 
 using ROS2;
 using System;
-using geometry_msgs.msg;
 
 public class KeyControlExample : MonoBehaviour
 {

@@ -310,8 +310,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6220412255343230988}
-  - component: {fileID: 927889342268475145}
   - component: {fileID: 65528500553438691}
+  - component: {fileID: 1761913188875747896}
   m_Layer: 0
   m_Name: DiffBot
   m_TagString: Untagged
@@ -339,25 +339,6 @@ Transform:
   - {fileID: 993501406122342847}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &927889342268475145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3144207822714867869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b28aa0b1f134aae9c8ceb91632b21942, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  node_name: differential_drive_node
-  left_topic_name: /left_wheel_velocity
-  right_topic_name: /right_wheel_velocity
-  posture_topic_name: /robot_posture
-  leftWheel: {fileID: 659547782749185277}
-  rightWheel: {fileID: 6483604427786837838}
-  robotBody: {fileID: 9114474558236470872}
 --- !u!114 &65528500553438691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,6 +351,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feab04ad06492965492b3edc6423aa53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1761913188875747896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3144207822714867869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b28aa0b1f134aae9c8ceb91632b21942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node_name: diff_bot_node
+  left_topic_name: /left_wheel_velocity
+  right_topic_name: /right_wheel_velocity
+  posture_topic_name: /robot_posture
+  leftWheel: {fileID: 659547782749185277}
+  rightWheel: {fileID: 6483604427786837838}
+  robotBody: {fileID: 9114474558236470872}
 --- !u!1 &5634050651848402476
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +579,7 @@ ArticulationBody:
   m_GameObject: {fileID: 9114474558236470872}
   m_Enabled: 1
   serializedVersion: 5
-  m_Mass: 20
+  m_Mass: 10
   m_ParentAnchorPosition: {x: 0, y: 0, z: 0}
   m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
