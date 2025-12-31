@@ -1335,6 +1335,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 3514473570137585953}
     m_Modifications:
     - target: {fileID: 1072748714373430414, guid: 4d3d766ea1db38badaa5a6b3798f7b8d, type: 3}
+      propertyPath: frame_id
+      value: base_link
+      objectReference: {fileID: 0}
+    - target: {fileID: 1072748714373430414, guid: 4d3d766ea1db38badaa5a6b3798f7b8d, type: 3}
       propertyPath: noise_stddev
       value: 0.005
       objectReference: {fileID: 0}
