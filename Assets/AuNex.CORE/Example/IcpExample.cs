@@ -47,7 +47,7 @@ public class IcpExample : MonoBehaviour
     // 自己位置のPublisher
     private IPublisher<geometry_msgs.msg.PoseStamped> pose_publisher;
     // AuNex.Localizationライブラリで定義されたICPアルゴリズム
-    private ICP_Hash icp;
+    private ICP_KdTree icp;
     // ICPの初期化フラグ
     private bool is_initialized = false;
     // 推定結果
@@ -62,7 +62,7 @@ public class IcpExample : MonoBehaviour
     void Start()
     {
         ros2Unity = GetComponent<ROS2UnityComponent>();
-        icp = new ICP_Hash(hash_cell_size, max_correspondence_distance);
+        icp = new ICP_KdTree(max_correspondence_distance);
         rotation_ = 0.0f;
         translation_ = Vector2.zero;
     }
@@ -92,7 +92,7 @@ public class IcpExample : MonoBehaviour
         // 推定した自己位置をROS2に送信
         var tf_msg = new geometry_msgs.msg.PoseStamped();
         node.clock.UpdateROSClockTime(tf_msg.Header.Stamp);
-        tf_msg.Header.Frame_id = "map";
+        tf_msg.Header.Frame_id = "lidar_frame";
         tf_msg.Pose.Position.X = translation_.x;
         tf_msg.Pose.Position.Y = translation_.y;
         tf_msg.Pose.Position.Z = 0.0;
@@ -141,6 +141,6 @@ public class IcpExample : MonoBehaviour
     {
         // 受信した姿勢を使ってICPの初期推定を更新
         Quaternion quat = new Quaternion((float)msg.X, (float)msg.Y, (float)msg.Z, (float)msg.W);
-        rotation_ = MathUtils.toRadUnity(quat);
+        rotation_ = -1.0f*MathUtils.toRadUnity(quat);
     }
 }
