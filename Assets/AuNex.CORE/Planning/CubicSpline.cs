@@ -64,18 +64,18 @@ namespace AuNex
             /// <param name="frame_id">フレームID</param>
             /// <returns></returns>
             public static nav_msgs.msg.Path CreatePath(
-                geometry_msgs.msg.TransformStamped current,
-                geometry_msgs.msg.TransformStamped target,
+                geometry_msgs.msg.PoseStamped current,
+                geometry_msgs.msg.PoseStamped target,
                 int N,
                 String frame_id
             )
             {
                 // 現在のロボットの向きと目的のロボットの向きを取得
-                float current_yaw = TransformUtils.QuatToYaw(current.Transform.Rotation);
-                float target_yaw = TransformUtils.QuatToYaw(target.Transform.Rotation);
+                float current_yaw = TransformUtils.QuatToYaw(current.Pose.Orientation) + 90.0f * Mathf.Deg2Rad;
+                float target_yaw = TransformUtils.QuatToYaw(target.Pose.Orientation);
                 // 現在位置と目的位置を２次元にする
-                Vector2 current2d = new((float)current.Transform.Translation.X, (float)current.Transform.Translation.Y);
-                Vector2 target2d = new((float)target.Transform.Translation.X, (float)target.Transform.Translation.Y);
+                Vector2 current2d = new((float)current.Pose.Position.X, (float)current.Pose.Position.Y);
+                Vector2 target2d = new((float)target.Pose.Position.X, (float)target.Pose.Position.Y);
                 // 距離ベクトルを計算する
                 Vector2 delta2d = target2d - current2d;
                 // 距離の絶対値を計算

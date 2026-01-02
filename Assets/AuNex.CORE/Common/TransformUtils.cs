@@ -62,9 +62,9 @@ namespace AuNex
 
             public static float QuatToYaw(geometry_msgs.msg.Quaternion q)
             {
-                var unity_q = new Quaternion((float)q.Y, (float)(-1.0*q.Z), (float)(-1.0*q.X), (float)(q.W));
+                var unity_q = new Quaternion((float)q.X, (float)q.Y, (float)q.Z, (float)q.W);
 
-                return unity_q.eulerAngles.y * Mathf.Deg2Rad;
+                return unity_q.eulerAngles.z * Mathf.Deg2Rad;
             }          
         }
 
@@ -119,7 +119,7 @@ namespace AuNex
                     bool correct_child = child_frame_id == t.Child_frame_id;
 
                     if(correct_frame && correct_child)
-                    {
+                    {                
                         found = true;
 
                         p.Pose.Position.X = t.Transform.Translation.X;
