@@ -52,13 +52,13 @@ namespace AuNex
 
                 double dx = target_pose.Pose.Position.X - current_pose.Pose.Position.X;
                 double dy = target_pose.Pose.Position.Y - current_pose.Pose.Position.Y;
-                
-                double distance = velocityGain * Math.Sqrt(dx*dx + dy*dy);
+
+                double distance = Math.Sqrt(dx*dx + dy*dy);
 
                 double alpha = Math.Atan2(dy, dx) - TransformUtils.QuatToYaw(current_pose.Pose.Orientation)- 90.0f*Mathf.Deg2Rad;
 
                 var cmd_vel = new geometry_msgs.msg.Twist();
-                cmd_vel.Linear.Y = distance;
+                cmd_vel.Linear.Y = velocityGain * distance;
                 cmd_vel.Angular.Z = distance * (2.0 * Math.Sin(alpha) / lookAheadDistance);
 
                 return cmd_vel;
