@@ -9,12 +9,6 @@ using MathNet.Numerics.LinearAlgebra;
 
 // ROS2を使うためのusing
 using ROS2;
-// AuNexのICPを扱うため
-using AuNex.Localization;
-// AuNexの点群変換関数を扱うため
-using AuNex.Algorithm;
-// TFブロードキャスターを扱うため
-using AuNex.Common;
 
 
 /// <summary>
@@ -48,9 +42,9 @@ public class IcpExample : MonoBehaviour
     // 姿勢のサブスクライバ
     private ISubscription<geometry_msgs.msg.Quaternion> posture_subscription;
     // 自己位置のPublisher
-    private TFBroadCaster tfBroadCaster;
+    private AuNex.Common.TFBroadCaster tfBroadCaster;
     // AuNex.Localizationライブラリで定義されたICPアルゴリズム
-    private ICP_KdTree icp;
+    private AuNex.Localization.ICP_KdTree icp;
     // ICPの初期化フラグ
     private bool is_initialized = false;
     // 推定結果
@@ -65,7 +59,7 @@ public class IcpExample : MonoBehaviour
     void Start()
     {
         ros2Unity = GetComponent<ROS2UnityComponent>();
-        icp = new ICP_KdTree(max_correspondence_distance);
+        icp = new AuNex.Localization.ICP_KdTree(max_correspondence_distance);
         rotation_ = 0.0f;
         translation_ = Vector2.zero;
     }
@@ -89,7 +83,7 @@ public class IcpExample : MonoBehaviour
                 ProcessPosture
             );
 
-            tfBroadCaster = new TFBroadCaster(node);
+            tfBroadCaster = new AuNex.Common.TFBroadCaster(node);
         }
         else
         {
@@ -115,7 +109,7 @@ public class IcpExample : MonoBehaviour
     {
         // レーザースキャンを点群に変換
         List<Vector2> scan_points = new(msg.Ranges.Length);
-        ScanUtils.LaserScanToPointCloud(msg, ref scan_points);
+        AuNex.Common.ScanUtils.LaserScanToPointCloud(msg, ref scan_points);
 
         if(!is_initialized)
         {
@@ -146,7 +140,6 @@ public class IcpExample : MonoBehaviour
     void ProcessPosture(geometry_msgs.msg.Quaternion msg)
     {
         // 受信した姿勢を使ってICPの初期推定を更新
-        Quaternion quat = new Quaternion((float)msg.X, (float)msg.Y, (float)msg.Z, (float)msg.W);
-        rotation_ = MathUtils.toRadUnity(quat);
+        rotation_ = AuNex.Common.TransformUtils.QuatToYaw(msg);
     }
 }

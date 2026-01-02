@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 
 using ROS2;
-using System.IO;
 
 public class PurePursuitExample : MonoBehaviour
 {
