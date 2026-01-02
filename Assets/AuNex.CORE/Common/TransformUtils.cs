@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using ROS2;
+using System;
 
 namespace AuNex
 {
@@ -81,6 +82,92 @@ namespace AuNex
                 var tf = TransformUtils.CreateTFMessage(t);
 
                 publisher.Publish(tf);
+            }
+        }
+
+        public class TFListener
+        {
+            private ISubscription<tf2_msgs.msg.TFMessage> dynamic_subscription;
+            private ISubscription<tf2_msgs.msg.TFMessage> static_subscription;
+            private tf2_msgs.msg.TFMessage dynamic_;
+            private tf2_msgs.msg.TFMessage static_;
+
+            public TFListener(ROS2Node node)
+            {
+                dynamic_ = new();
+                static_ = new();
+
+                dynamic_subscription = node.CreateSubscription<tf2_msgs.msg.TFMessage>(
+                    "/tf",
+                    CallbackOfDynamicTF
+                );
+
+                static_subscription = node.CreateSubscription<tf2_msgs.msg.TFMessage>(
+                    "/tf_static",
+                    CallbackOfStaticTF
+                );
+            }
+
+            public geometry_msgs.msg.PoseStamped GetDynamicTransform(String frame_id, String child_frame_id)
+            {
+                var p = new geometry_msgs.msg.PoseStamped();
+                bool found = false;
+
+                foreach(var t in dynamic_.Transforms)
+                {
+                    bool correct_frame = frame_id == t.Header.Frame_id;
+                    bool correct_child = child_frame_id == t.Child_frame_id;
+
+                    if(correct_frame && correct_child)
+                    {
+                        found = true;
+
+                        p.Pose.Position.X = t.Transform.Translation.X;
+                        p.Pose.Position.Y = t.Transform.Translation.Y;
+                        p.Pose.Position.Z = t.Transform.Translation.Z;
+                        p.Pose.Orientation = t.Transform.Rotation;
+                    }
+                }
+
+                if(!found)Debug.LogWarning("指定されたTransformが見つかりませんでした。");
+
+                return p;
+            }
+
+            public geometry_msgs.msg.PoseStamped GetStaticTransform(String frame_id, String child_frame_id)
+            {
+                var p = new geometry_msgs.msg.PoseStamped();
+                bool found = false;
+
+                foreach(var t in static_.Transforms)
+                {
+                    bool correct_frame = frame_id == t.Header.Frame_id;
+                    bool correct_child = child_frame_id == t.Child_frame_id;
+
+                    if(correct_frame && correct_child)
+                    {
+                        found = true;
+
+                        p.Pose.Position.X = t.Transform.Translation.X;
+                        p.Pose.Position.Y = t.Transform.Translation.Y;
+                        p.Pose.Position.Z = t.Transform.Translation.Z;
+                        p.Pose.Orientation = t.Transform.Rotation;
+                    }
+                }
+
+                if(!found)Debug.LogWarning("指定されたTransformが見つかりませんでした。");
+
+                return p;
+            }
+
+            private void CallbackOfDynamicTF(tf2_msgs.msg.TFMessage msg)
+            {
+                dynamic_ = msg;
+            }
+
+            private void CallbackOfStaticTF(tf2_msgs.msg.TFMessage msg)
+            {
+                static_ = msg;
             }
         }
     }// end of namespace Common
