@@ -52,17 +52,19 @@ public class DifferentialDriver : MonoBehaviour
 
             posture_publisher = node.CreatePublisher<geometry_msgs.msg.Quaternion>(posture_topic_name);
         }
+        else
+        {
+            leftWheel.SetDriveTargetVelocity(ArticulationDriveAxis.X, left_wheel_velocity);
+            rightWheel.SetDriveTargetVelocity(ArticulationDriveAxis.X, right_wheel_velocity);
 
-        leftWheel.SetDriveTargetVelocity(ArticulationDriveAxis.X, left_wheel_velocity);
-        rightWheel.SetDriveTargetVelocity(ArticulationDriveAxis.X, right_wheel_velocity);
-
-        geometry_msgs.msg.Quaternion posture_msg = new geometry_msgs.msg.Quaternion();
-        Quaternion posture = robotBody.transform.rotation;
-        posture_msg.X = posture.x;
-        posture_msg.Y = posture.y;
-        posture_msg.Z = posture.z;
-        posture_msg.W = posture.w;
-        posture_publisher.Publish(posture_msg);
+            geometry_msgs.msg.Quaternion posture_msg = new geometry_msgs.msg.Quaternion();
+            Quaternion posture = robotBody.transform.rotation;
+            posture_msg.X = posture.x;
+            posture_msg.Y = posture.y;
+            posture_msg.Z = posture.z;
+            posture_msg.W = posture.w;
+            posture_publisher.Publish(posture_msg);
+        }
     }
 
     void DriveLeftWheel(std_msgs.msg.Float32 msg)

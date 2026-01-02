@@ -65,7 +65,10 @@ public class DiffDriveExample : MonoBehaviour
         left_msg.Data = left_omega * RAD2RPM;
         right_msg.Data = right_omega * RAD2RPM;
 
-        left_velocity_publisher.Publish(left_msg);
-        right_velocity_publisher.Publish(right_msg);
+        if(node != null)
+        {
+            left_velocity_publisher.Publish(left_msg);
+            right_velocity_publisher.Publish(right_msg);
+        }
     }
 }

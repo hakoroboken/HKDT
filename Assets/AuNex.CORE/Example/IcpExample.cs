@@ -91,22 +91,24 @@ public class IcpExample : MonoBehaviour
 
             tfBroadCaster = new TFBroadCaster(node);
         }
+        else
+        {
+            var tf = new geometry_msgs.msg.TransformStamped();
+            tf.Header.Frame_id = "map";
+            tf.Child_frame_id = "base_link";
+            node.clock.UpdateROSClockTime(tf.Header.Stamp);
+            tf.Transform.Translation.X = translation_.x;
+            tf.Transform.Translation.Y = translation_.y;
+            tf.Transform.Translation.Z = 0.0;
 
-        var tf = new geometry_msgs.msg.TransformStamped();
-        tf.Header.Frame_id = "map";
-        tf.Child_frame_id = "base_link";
-        node.clock.UpdateROSClockTime(tf.Header.Stamp);
-        tf.Transform.Translation.X = translation_.x;
-        tf.Transform.Translation.Y = translation_.y;
-        tf.Transform.Translation.Z = 0.0;
+            Quaternion quat = Quaternion.Euler(0.0f, 0.0f, rotation_ * Mathf.Rad2Deg);
+            tf.Transform.Rotation.X = quat.x;
+            tf.Transform.Rotation.Y = quat.y;
+            tf.Transform.Rotation.Z = quat.z;
+            tf.Transform.Rotation.W = quat.w;
 
-        Quaternion quat = Quaternion.Euler(0.0f, 0.0f, rotation_ * Mathf.Rad2Deg);
-        tf.Transform.Rotation.X = quat.x;
-        tf.Transform.Rotation.Y = quat.y;
-        tf.Transform.Rotation.Z = quat.z;
-        tf.Transform.Rotation.W = quat.w;
-
-        tfBroadCaster.SendTransform(tf);
+            tfBroadCaster.SendTransform(tf);
+        }
     }
 
     void ProcessScan(sensor_msgs.msg.LaserScan msg)

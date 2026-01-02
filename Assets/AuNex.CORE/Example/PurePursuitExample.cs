@@ -57,7 +57,6 @@ public class PurePursuitExample : MonoBehaviour
                 var cmd_vel = pure_pursuit.Compute(current_pose);
 
                 var ref_pose = path_.Poses[pure_pursuit.GetTargetIdx()];
-                Debug.Log(pure_pursuit.GetTargetIdx());
                 ref_pose_publisher.Publish(ref_pose);
 
                 cmd_publisher.Publish(cmd_vel);
