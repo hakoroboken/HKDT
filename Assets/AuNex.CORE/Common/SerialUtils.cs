@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Ports;
 using UnityEngine;
 
 namespace AuNex
@@ -9,11 +10,24 @@ namespace AuNex
     {
         public class SerialHandler
         {
+            public enum ReadType
+            {
+                STRING,
+                BYTE
+            }
+
+            public struct ReadData
+            {
+                public string str_data;
+                public byte[] byte_data;
+            }
+
             // シリアル通信のパラメータ
             private String portName;
             private int baudRate = 115200;
             private int readTimeout = 10;
             private int writeTimeout = 10;
+            private ReadType readType = ReadType.STRING;
 
             // シリアルポート
             private System.IO.Ports.SerialPort serialPort;
@@ -21,9 +35,11 @@ namespace AuNex
             // 受信をサブスレッドで実行する
             private System.Threading.Thread readThread;
             private bool isOpened = false;
-            private System.Collections.Concurrent.ConcurrentQueue<string> receiveBuffer;
+            private bool newMessageReceived = false;
+            private string receiveBuffer;
+            private List<byte> receiveBufferByte;
 
-            public SerialHandler(String port_name, int baud_rate, int read_timeout, int write_timeout)
+            public SerialHandler(String port_name, int baud_rate, int read_timeout=10, int write_timeout=10)
             {
                 portName = port_name;
                 baudRate = baud_rate;
@@ -31,14 +47,20 @@ namespace AuNex
                 writeTimeout = write_timeout;
 
                 isOpened = false;
-                receiveBuffer = new System.Collections.Concurrent.ConcurrentQueue<string>();
+                receiveBuffer = new String("error");
+                receiveBufferByte = new();
             }
 
-            public void OpenSerial(bool enable_read_thread)
+            public void SetReadType(ReadType type)
+            {
+                readType = type;
+            }
+
+            public void OpenSerial()
             {
                 try
                 {
-                    serialPort = new System.IO.Ports.SerialPort(portName, baudRate)
+                    serialPort = new System.IO.Ports.SerialPort(portName, baudRate, System.IO.Ports.Parity.None, 8, System.IO.Ports.StopBits.One)
                     {
                         NewLine = "\n",
                         ReadTimeout = readTimeout,
@@ -47,16 +69,11 @@ namespace AuNex
 
                     Debug.Log("Open Serial ...");
                     serialPort.Open();
-
-                    if(enable_read_thread)
-                    {
-                        new WaitForSeconds(1);
-                        Debug.Log("Start read thread.");
-                        isOpened = true;
-                        readThread = new System.Threading.Thread(Read);
-                        readThread.Start();
-                    }
-                    new WaitForSeconds(1);
+                    isOpened = true;
+                    
+                    Debug.Log("Start read thread.");
+                    readThread = new System.Threading.Thread(Read);
+                    readThread.Start();
                 }
                 catch(Exception ex)
                 {
@@ -64,17 +81,25 @@ namespace AuNex
                 }
             }
 
-            public String GetReadBuffer()
+            public ReadData ReadSerial()
             {
-                if(receiveBuffer.TryDequeue(out String data))
+                if(newMessageReceived)
                 {
-                    return data;
+                    var read_data = new ReadData();
+                    read_data.byte_data = receiveBufferByte.ToArray();
+                    read_data.str_data = receiveBuffer;
+
+                    receiveBufferByte.Clear();
+                    newMessageReceived = false;
+
+                    return read_data;
                 }
                 else
                 {
-                    // Debug.LogError("Failed to get data from buffer.");
-
-                    return new String("ERROR");
+                    var read_data = new ReadData();
+                    read_data.byte_data = new byte[1];
+                    read_data.str_data = "ERROR";
+                    return read_data;
                 }
             }
 
@@ -96,18 +121,23 @@ namespace AuNex
                 }
             }
 
-            public String ReadSerial()
+            public void WriteSerial(byte[] data, int size)
             {
+                if(serialPort == null)
+                {
+                    Debug.LogError("Port hasn't already opened .");
+                    return;
+                }
+
                 try
                 {
-                    return serialPort.ReadLine();
+                    serialPort.Write(data, 0, size);
                 }
                 catch(TimeoutException)
                 {
-                    return null;
+                    
                 }
             }
-
             public void CloseSerial()
             {
                 isOpened = false;
@@ -119,12 +149,29 @@ namespace AuNex
 
             private void Read()
             {
-                while(isOpened)
+                while(isOpened && serialPort != null && serialPort.IsOpen)
                 {
                     try
                     {
-                        string data = serialPort.ReadLine();
-                        receiveBuffer.Enqueue(data);
+                        if(readType == ReadType.STRING)
+                        {
+                            receiveBuffer = serialPort.ReadLine();
+                            newMessageReceived = true;
+                        }
+                        else if(readType == ReadType.BYTE)
+                        {
+                            byte[] buf = new byte[1];
+                            int read = serialPort.Read(buf, 0, 1);
+
+                            if(read == 0)continue;
+
+                            if(buf[0] == 0x0A)
+                            {
+                                newMessageReceived = true;
+                            }
+
+                            receiveBufferByte.Add(buf[0]);
+                        }
                     }
                     catch(TimeoutException)
                     {
