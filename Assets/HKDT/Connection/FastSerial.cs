@@ -55,9 +55,6 @@ public class FastSerial : MonoBehaviour
             {
                 Debug.Log($"[{nodeName}]ノードを初期化します");
                 initializeNode();
-            }
-            else
-            {
                 Debug.Log($"[{nodeName}]シリアル通信を開始します");
                 OpenSerial();
             }
@@ -68,7 +65,7 @@ public class FastSerial : MonoBehaviour
         }
     }
 
-    public void Oestroy()
+    public void OnDestroy()
     {
         CloseSerial();
         Debug.Log($"[{nodeName}]シリアル通信を終了しました");
@@ -118,6 +115,8 @@ public class FastSerial : MonoBehaviour
             
             readThread = new Thread(SerialCallback);
             readThread.Start();
+
+            writeData = new();
         }
         catch(Exception ex)
         {
@@ -154,7 +153,10 @@ public class FastSerial : MonoBehaviour
                     byte[] read_data = new byte[readSize];
                     Array.Copy(buffer, read_data, readSize);
 
-                    var read_data_msg = new std_msgs.msg.ByteMultiArray();
+                    var read_data_msg = new std_msgs.msg.ByteMultiArray
+                    {
+                        Data = read_data
+                    };
 
                     readDataPublisher.Publish(read_data_msg);
 
@@ -167,10 +169,11 @@ public class FastSerial : MonoBehaviour
             catch(TimeoutException)
             {
                 // Timeout時はなにもしない
+                // Debug.Log($"[{nodeName}] たいむあうと〜");
             }
             catch(Exception ex)
             {
-                Debug.LogError($"[Serial] Open failed: {ex.Message}");
+                Debug.LogError($"[{nodeName}] サブスレッドエラー：{ex.Message}");
             }
         }
     }
