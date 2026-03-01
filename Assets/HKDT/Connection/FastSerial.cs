@@ -54,7 +54,7 @@ public class FastSerial : MonoBehaviour
             if(node == null)
             {
                 Debug.Log($"[{nodeName}]ノードを初期化します");
-                initializeNode();
+                InitializeNode();
                 Debug.Log($"[{nodeName}]シリアル通信を開始します");
                 OpenSerial();
             }
@@ -75,7 +75,7 @@ public class FastSerial : MonoBehaviour
     /// <summary>
     /// ROS2のパブリッシャーとサブスクライバを初期化する
     /// </summary>
-    private void initializeNode()
+    private void InitializeNode()
     {
         node = ros2unity.CreateNode(nodeName);
 
@@ -83,7 +83,7 @@ public class FastSerial : MonoBehaviour
 
         writeDataSubscriber = node.CreateSubscription<std_msgs.msg.ByteMultiArray>(
             writeTopicName,
-            writeDataCallback
+            WriteDataCallback
         );
     }
 
@@ -91,7 +91,7 @@ public class FastSerial : MonoBehaviour
     /// ROS2サブスクライバがデータを受信した際に実行する関数
     /// </summary>
     /// <param name="msg"></param>
-    private void writeDataCallback(std_msgs.msg.ByteMultiArray msg)
+    private void WriteDataCallback(std_msgs.msg.ByteMultiArray msg)
     {
         writeData.Enqueue(msg.Data);
     }
