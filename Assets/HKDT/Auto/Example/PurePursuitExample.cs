@@ -1,15 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
-
 using ROS2;
+
+using HKDT.Auto.Common;
+using HKDT.Auto.Control;
 
 public class PurePursuitExample : MonoBehaviour
 {
-    public String node_name = "pure_pursuit_node";
-    public String cmd_vel_topic_name = "/cmd_vel";
-    public String path_topic_name = "/path";
+    public string node_name = "pure_pursuit_node";
+    public string cmd_vel_topic_name = "/cmd_vel";
+    public string path_topic_name = "/path";
     public float look_ahead_distance = 0.1f;
     public float velocity_gain = 1.0f;
     private ROS2UnityComponent ros2Unity;
@@ -17,16 +16,16 @@ public class PurePursuitExample : MonoBehaviour
     private IPublisher<geometry_msgs.msg.Twist> cmd_publisher;
     private IPublisher<geometry_msgs.msg.PoseStamped> ref_pose_publisher;
     private ISubscription<nav_msgs.msg.Path> path_subscriber;
-    private AuNex.Common.TFListener tfListener;
+    private TFListener tfListener;
     private nav_msgs.msg.Path path_;
 
-    private AuNex.Control.PurePursuit pure_pursuit;
+    private PurePursuit pure_pursuit;
 
     // Start is called before the first frame update
     void Start()
     {
         ros2Unity = GetComponent<ROS2UnityComponent>();
-        pure_pursuit = new AuNex.Control.PurePursuit(look_ahead_distance, velocity_gain);
+        pure_pursuit = new PurePursuit(look_ahead_distance, velocity_gain);
     }
 
     // Update is called once per frame
@@ -45,7 +44,7 @@ public class PurePursuitExample : MonoBehaviour
                 PathCallback
             );
 
-            tfListener = new AuNex.Common.TFListener(node);
+            tfListener = new TFListener(node);
         }
         else
         {

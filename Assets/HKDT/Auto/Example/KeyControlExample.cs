@@ -7,8 +7,8 @@ using System;
 
 public class KeyControlExample : MonoBehaviour
 {
-    public String node_name = "controller_node";
-    public String cmd_vel_topic_name = "/cmd_vel";
+    public string node_name = "controller_node";
+    public string cmd_vel_topic_name = "/cmd_vel";
     public float max_linear_velocity = 1.0f;
     public float max_angular_velocity = 1.0f;
     private ROS2UnityComponent ros2Unity;

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using ROS2;
@@ -7,10 +5,10 @@ using System;
 
 public class DiffDriveExample : MonoBehaviour
 {
-    public String node_name = "diff_drive_node";
-    public String cmd_vel_topic_name = "/cmd_vel";
-    public String left_velocity_topic_name = "/left_wheel_velocity";
-    public String right_velocity_topic_name = "/right_wheel_velocity";
+    public string node_name = "diff_drive_node";
+    public string cmd_vel_topic_name = "/cmd_vel";
+    public string left_velocity_topic_name = "/left_wheel_velocity";
+    public string right_velocity_topic_name = "/right_wheel_velocity";
     public float wheel_width = 0.1f;
     public float wheel_radius = 0.1f;
     private ROS2UnityComponent ros2Unity;

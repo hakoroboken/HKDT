@@ -1,11 +1,14 @@
 // Unityの基本的なusing
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // ROS2を使うためのusing
 using ROS2;
+
+// HKDTライブラリ
+using HKDT.Auto.Common;
+using HKDT.Auto.Localization;
 
 
 /// <summary>
@@ -39,9 +42,9 @@ public class IcpExample : MonoBehaviour
     // 姿勢のサブスクライバ
     private ISubscription<geometry_msgs.msg.Quaternion> posture_subscription;
     // 自己位置のPublisher
-    private AuNex.Common.TFBroadCaster tfBroadCaster;
+    private TFBroadCaster tfBroadCaster;
     // AuNex.Localizationライブラリで定義されたICPアルゴリズム
-    private AuNex.Localization.ICP_KdTree icp;
+    private ICP_KdTree icp;
     // ICPの初期化フラグ
     private bool is_initialized = false;
     // 推定結果
@@ -56,7 +59,7 @@ public class IcpExample : MonoBehaviour
     void Start()
     {
         ros2Unity = GetComponent<ROS2UnityComponent>();
-        icp = new AuNex.Localization.ICP_KdTree(max_correspondence_distance);
+        icp = new ICP_KdTree(max_correspondence_distance);
         rotation_ = 0.0f;
         translation_ = Vector2.zero;
     }
@@ -80,7 +83,7 @@ public class IcpExample : MonoBehaviour
                 ProcessPosture
             );
 
-            tfBroadCaster = new AuNex.Common.TFBroadCaster(node);
+            tfBroadCaster = new TFBroadCaster(node);
         }
         else
         {
@@ -137,6 +140,6 @@ public class IcpExample : MonoBehaviour
     void ProcessPosture(geometry_msgs.msg.Quaternion msg)
     {
         // 受信した姿勢を使ってICPの初期推定を更新
-        rotation_ = AuNex.Common.TransformUtils.QuatToYaw(msg);
+        rotation_ = TransformUtils.QuatToYaw(msg);
     }
 }

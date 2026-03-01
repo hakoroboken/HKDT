@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 using ROS2;
-using System;
+
+using HKDT.Auto.Common;
 
 public class DifferentialDriver : MonoBehaviour
 {
-    public String node_name = "diff_bot_node";
-    public String left_topic_name = "/left_wheel_velocity";
-    public String right_topic_name = "/right_wheel_velocity";
-    public String posture_topic_name = "/robot_posture";
+    public string node_name = "diff_bot_node";
+    public string left_topic_name = "/left_wheel_velocity";
+    public string right_topic_name = "/right_wheel_velocity";
+    public string posture_topic_name = "/robot_posture";
     public ArticulationBody leftWheel;
     public ArticulationBody rightWheel;
     public GameObject robotBody;
@@ -57,7 +55,7 @@ public class DifferentialDriver : MonoBehaviour
             leftWheel.SetDriveTargetVelocity(ArticulationDriveAxis.X, left_wheel_velocity);
             rightWheel.SetDriveTargetVelocity(ArticulationDriveAxis.X, right_wheel_velocity);
 
-            var posture_msg = AuNex.Common.TransformUtils.Unity2Ros(robotBody.transform.rotation);
+            var posture_msg = TransformUtils.Unity2Ros(robotBody.transform.rotation);
             posture_publisher.Publish(posture_msg);
         }
     }
