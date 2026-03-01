@@ -1,12 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-using AuNex.Algorithm;
-
-using MathNet.Numerics.LinearAlgebra;
-using System;
-using Unity.VisualScripting;
+using HKDT.Auto.Algorithm;
 
 namespace AuNex
 {

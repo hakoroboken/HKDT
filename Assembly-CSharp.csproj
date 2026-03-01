@@ -60,33 +60,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="/home/hakorobo/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.1/Analyzers/Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/shape_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/visualization_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/nav_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/diagnostic_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/lifecycle_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/type_description_interfaces_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/ros2cs_common.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/geometry_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/composition_interfaces_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/trajectory_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/unique_identifier_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/ros2cs_core.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/statistics_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/service_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/stereo_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/tf2_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/rcl_interfaces_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/test_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/sensor_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Plugins/MathNet.Numerics.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/builtin_interfaces_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/example_interfaces_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/action_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/rosgraph_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/actionlib_msgs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/std_srvs_assembly.dll" />
-    <Analyzer Include="/home/hakorobo/Unity/HKDT/Assets/HKDT/Ros2ForUnity/Plugins/std_msgs_assembly.dll" />
     <Analyzer Include="/home/hakorobo/Unity/Hub/Editor/2022.3.62f3/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/home/hakorobo/Unity/Hub/Editor/2022.3.62f3/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
@@ -94,7 +67,7 @@
     <Compile Include="Assets/HKDT/Auto/Example/KeyControlExample.cs" />
     <Compile Include="Assets/HKDT/Ros2ForUnity/Scripts/ROS2ForUnity.cs" />
     <Compile Include="Assets/HKDT/Ros2ForUnity/Scripts/Time/TimeUtils.cs" />
-    <Compile Include="Assets/HKDT/Auto/Common/SerialUtils.cs" />
+    <Compile Include="Assets/HKDT/Connection/FastSerial.cs" />
     <Compile Include="Assets/ROS2UnityComponent.cs" />
     <Compile Include="Assets/HKDT/Auto/Common/MathUtils.cs" />
     <Compile Include="Assets/HKDT/Auto/Algorithm/SpatialHash.cs" />
@@ -115,9 +88,9 @@
     <Compile Include="Assets/HKDT/Simulation/Sensor/LidarBase.cs" />
     <Compile Include="Assets/HKDT/Ros2ForUnity/Scripts/ROS2TalkerExample.cs" />
     <Compile Include="Assets/HKDT/Auto/Example/DiffDriveExample.cs" />
+    <Compile Include="Assets/HKDT/Ros2ForUnity/Scripts/ROS2ServiceExample.cs" />
     <Compile Include="Assets/HKDT/Auto/Localization/IterativeClosestPoint.cs" />
     <Compile Include="Assets/HKDT/Ros2ForUnity/Scripts/ROS2ClientExample.cs" />
-    <Compile Include="Assets/HKDT/Ros2ForUnity/Scripts/ROS2ServiceExample.cs" />
     <Compile Include="Assets/HKDT/Auto/Sensing/HokuyoDriver.cs" />
     <Compile Include="Assets/HKDT/Auto/Algorithm/KdTree.cs" />
     <Compile Include="Assets/HKDT/Auto/Common/TransformUtils.cs" />

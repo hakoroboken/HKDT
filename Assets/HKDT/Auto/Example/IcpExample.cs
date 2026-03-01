@@ -4,9 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 行列計算ライブラリ
-using MathNet.Numerics.LinearAlgebra;
-
 // ROS2を使うためのusing
 using ROS2;
 
@@ -109,7 +106,7 @@ public class IcpExample : MonoBehaviour
     {
         // レーザースキャンを点群に変換
         List<Vector2> scan_points = new(msg.Ranges.Length);
-        AuNex.Common.ScanUtils.LaserScanToPointCloud(msg, ref scan_points);
+        HKDT.Auto.Common.ScanUtils.LaserScanToPointCloud(msg, ref scan_points);
 
         if(!is_initialized)
         {
