@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using System.Collections.Concurrent;
 
 // マルチスレッド化
 using System.Threading;
@@ -9,7 +9,6 @@ using System.IO.Ports;
 
 // ROS2
 using ROS2;
-using System.Collections.Concurrent;
 
 public class FastSerial : MonoBehaviour
 {
@@ -141,7 +140,7 @@ public class FastSerial : MonoBehaviour
     /// </summary>
     private void SerialCallback()
     {
-        while(isOpened && serialPort != null && serialPort.IsOpen)
+        while(true)
         {
             try
             {
