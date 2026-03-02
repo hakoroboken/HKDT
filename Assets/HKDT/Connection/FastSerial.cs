@@ -27,7 +27,6 @@ public class FastSerial : MonoBehaviour
 
     // シリアルポート
     private SerialPort serialPort;
-    private bool isOpened = false;
     // 受信を行うスレッド
     private Thread readThread;
 
@@ -110,7 +109,6 @@ public class FastSerial : MonoBehaviour
             };
 
             serialPort.Open();
-            isOpened = true;
             
             readThread = new Thread(SerialCallback);
             readThread.Start();
@@ -128,8 +126,6 @@ public class FastSerial : MonoBehaviour
     /// </summary>
     public void CloseSerial()
     {
-        isOpened = false;
-
         if(readThread != null && readThread.IsAlive)readThread.Join();
 
         if(serialPort != null && serialPort.IsOpen)serialPort.Close();

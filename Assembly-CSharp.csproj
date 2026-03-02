@@ -71,6 +71,7 @@
     <Compile Include="Assets/ROS2UnityComponent.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/ROS2UnityCore.cs" />
     <Compile Include="Assets/HKDT/Auto/Common/MathUtils.cs" />
+    <Compile Include="Assets/HKDT/Connection/FastUdpServer.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/Transformations.cs" />
     <Compile Include="Assets/HKDT/Auto/Algorithm/SpatialHash.cs" />
     <Compile Include="Assets/HKDT/Auto/Example/PurePursuitExample.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="Assets/Ros2ForUnity/Scripts/Time/ITimeSource.cs" />
     <Compile Include="Assets/HKDT/Auto/Example/PathCreateExample.cs" />
     <Compile Include="Assets/HKDT/Simulation/Robot/OmniData/Scripts/Robot.cs" />
-    <Compile Include="Assets/HKDT/Connection/FastUdp.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/Sensor.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/Time/UnityTimeSource.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/ROS2TalkerExample.cs" />
@@ -103,6 +103,7 @@
     <Compile Include="Assets/HKDT/Auto/Example/IcpExample.cs" />
     <Compile Include="Assets/HKDT/Auto/Common/ScanUtils.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/PostInstall.cs" />
+    <Compile Include="Assets/HKDT/Connection/FastUdpAgent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Ros2ForUnity/Plugins/shape_msgs_assembly.dll" />
