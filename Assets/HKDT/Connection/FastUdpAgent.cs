@@ -8,9 +8,8 @@ using ROS2;
 public class FastUdpAgent : MonoBehaviour
 {
     [Header("UDP通信設定")]
-    public string MyIP = "192.168.11.5";
-    public int MyPort = 64201;
-    public int ReceiveTimeout = 3000;
+    public string AgentIP = "192.168.11.5";
+    public int AgentPort = 64201;
 
     [Header("ROS2設定")]
     public string NodeName = "FastUdp";
@@ -34,7 +33,7 @@ public class FastUdpAgent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        myEndPoint = new(IPAddress.Parse(MyIP), MyPort);
+        myEndPoint = new(IPAddress.Parse(AgentIP), AgentPort);
 
         ros2unity = GetComponent<ROS2UnityComponent>();
     }
@@ -75,7 +74,7 @@ public class FastUdpAgent : MonoBehaviour
             ExclusiveAddressUse = true,
             MulticastLoopback = false
         };
-        udpClient.Client.ReceiveTimeout = ReceiveTimeout;
+        udpClient.Client.ReceiveTimeout = 3000;
 
         sendData = new();
 
