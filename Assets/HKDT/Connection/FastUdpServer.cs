@@ -101,7 +101,7 @@ public class FastUdpServer : MonoBehaviour
                 else
                 {
                     byte[] pingData = new byte[1]{0};
-                    udpClient.Send(pingData, pingData.Length);
+                    udpClient.SendAsync(pingData, pingData.Length);
                 }
 
                 IPEndPoint senderIP = null;
