@@ -12,7 +12,7 @@ public class FastUdpAgent : MonoBehaviour
     public int AgentPort = 64201;
 
     [Header("ROS2設定")]
-    public string NodeName = "FastUdp";
+    public string NodeName = "FastUdpAgent";
     public string SendTopicName = "/udp/send";
     public string ReceiveTopicName = "/udp/receive";
 
@@ -68,12 +68,7 @@ public class FastUdpAgent : MonoBehaviour
 
     private void InitializeUDP()
     {
-        udpClient = new UdpClient(myEndPoint)
-        {
-            EnableBroadcast = false,
-            ExclusiveAddressUse = true,
-            MulticastLoopback = false
-        };
+        udpClient = new UdpClient(myEndPoint);
         udpClient.Client.ReceiveTimeout = 3000;
 
         sendData = new();

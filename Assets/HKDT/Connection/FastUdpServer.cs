@@ -53,6 +53,7 @@ public class FastUdpServer : MonoBehaviour
                 InitializeNode();
 
                 Debug.Log($"[{NodeName}] UDPを初期化します");
+                Debug.Log($"[{NodeName}] サーバーIP:{serverEndPoint} \nエージェントIP:{agentEndPoint}");
                 InitializeUDP();
             }
         }
@@ -72,12 +73,8 @@ public class FastUdpServer : MonoBehaviour
 
     private void InitializeUDP()
     {
-        udpClient = new UdpClient(serverEndPoint)
-        {
-            EnableBroadcast = false,
-            ExclusiveAddressUse = true,
-            MulticastLoopback = false
-        };
+        udpClient = new UdpClient(serverEndPoint);
+        udpClient.Connect(agentEndPoint);
         udpClient.Client.ReceiveTimeout = 3000;
 
         sendData = new();
@@ -104,7 +101,7 @@ public class FastUdpServer : MonoBehaviour
                 else
                 {
                     byte[] pingData = new byte[1]{0};
-                    udpClient.SendAsync(pingData, pingData.Length, agentEndPoint);
+                    udpClient.Send(pingData, pingData.Length);
                 }
 
                 IPEndPoint senderIP = null;
