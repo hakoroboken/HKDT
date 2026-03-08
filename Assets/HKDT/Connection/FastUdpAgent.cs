@@ -5,117 +5,112 @@ using System.Threading;
 using System.Collections.Concurrent;
 using ROS2;
 
-public class FastUdpAgent : MonoBehaviour
+
+namespace HKDT.Connection
 {
-    [Header("UDP通信設定")]
-    public string AgentIP = "192.168.11.5";
-    public int AgentPort = 64201;
-
-    [Header("ROS2設定")]
-    public string NodeName = "FastUdpAgent";
-    public string SendTopicName = "/udp/send";
-    public string ReceiveTopicName = "/udp/receive";
-
-    // UDPの変数
-    private UdpClient udpClient;
-    private IPEndPoint myEndPoint;
-
-    // 受信Thread
-    private Thread receiveThread;
-    
-    // ROS2変数
-    private ROS2UnityComponent ros2unity;
-    private ROS2Node node;
-    private IPublisher<std_msgs.msg.ByteMultiArray> receiveDataPublisher;
-    private ISubscription<std_msgs.msg.ByteMultiArray> sendDataSubscriber;
-
-    ConcurrentQueue<byte[]> sendData;
-    // Start is called before the first frame update
-    void Start()
+    public class FastUdpAgent
     {
-        myEndPoint = new(IPAddress.Parse(AgentIP), AgentPort);
+        [Header("UDP通信設定")]
+        private string AgentIP = "192.168.11.5";
+        private int AgentPort = 64201;
 
-        ros2unity = GetComponent<ROS2UnityComponent>();
-    }
+        // UDPの変数
+        private UdpClient udpClient;
+        private IPEndPoint myEndPoint;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(ros2unity.Ok())
+        // 受信Thread
+        private Thread receiveThread;
+        
+        // ROS2変数
+        private IPublisher<std_msgs.msg.UInt8MultiArray> receiveDataPublisher;
+        private ISubscription<std_msgs.msg.UInt8MultiArray> sendDataSubscriber;
+        private IPublisher<std_msgs.msg.Bool> statusPublisher;
+
+        ConcurrentQueue<byte[]> sendData;
+        public FastUdpAgent(string ip, int port)
         {
-            if(node == null)
-            {
-                Debug.Log($"[{NodeName}]ROS2を初期化します");
-                InitializeNode();
+            AgentIP = ip;
+            AgentPort = port;
 
-                Debug.Log($"[{NodeName}] UDPを初期化します");
-                InitializeUDP();
-            }
+            myEndPoint = new(IPAddress.Parse(AgentIP), AgentPort);
+
         }
-    }
 
-    private void InitializeNode()
-    {
-        node = ros2unity.CreateNode(NodeName);
-
-        receiveDataPublisher = node.CreatePublisher<std_msgs.msg.ByteMultiArray>(ReceiveTopicName);
-
-        sendDataSubscriber = node.CreateSubscription<std_msgs.msg.ByteMultiArray>(
-            SendTopicName,
-            SendDataCallback
-        );
-    }
-
-    private void InitializeUDP()
-    {
-        udpClient = new UdpClient(myEndPoint);
-        udpClient.Client.ReceiveTimeout = 3000;
-
-        sendData = new();
-
-        receiveThread = new Thread(UdpCallback);
-        receiveThread.Start();
-    }
-
-    private void SendDataCallback(std_msgs.msg.ByteMultiArray msg)
-    {
-        sendData.Enqueue(msg.Data);
-    }
-
-    private void UdpCallback()
-    {
-        while(true)
+        public bool Start(ROS2Node node, string send_topic_name, string receive_topic_name, string status_topic_name)
         {
+            receiveDataPublisher = node.CreatePublisher<std_msgs.msg.UInt8MultiArray>(receive_topic_name);
+            sendDataSubscriber = node.CreateSubscription<std_msgs.msg.UInt8MultiArray>(send_topic_name, SendDataCallback);
+            statusPublisher = node.CreatePublisher<std_msgs.msg.Bool>(status_topic_name);
+
             try
             {
-                IPEndPoint senderIP = null;
-                byte[] receiveBuffer = udpClient.Receive(ref senderIP);
+                udpClient = new UdpClient(myEndPoint);
+                udpClient.Client.ReceiveTimeout = 3000;
 
-                // サイズ１はping pong用
-                if(receiveBuffer.Length != 1)
-                {
-                    var receiveMsg = new std_msgs.msg.ByteMultiArray
-                    {
-                        Data = receiveBuffer
-                    };
+                sendData = new();
 
-                    receiveDataPublisher.Publish(receiveMsg);
-                }
+                receiveThread = new Thread(UdpCallback);
+                receiveThread.Start();
 
-                if(sendData.TryDequeue(out var result))
-                {
-                    udpClient.SendAsync(result, result.Length, senderIP);
-                }
-                else
-                {
-                    byte[] pingData = new byte[1]{0};
-                    udpClient.SendAsync(pingData, pingData.Length, senderIP);
-                }
+                return true;
             }
-            catch (SocketException e)
+            catch(SocketException)
             {
-                Debug.LogWarning($"[{NodeName}] 受信エラー：{e}");
+                return false;
+            }
+        }
+
+        private void SendDataCallback(std_msgs.msg.UInt8MultiArray msg)
+        {
+            sendData.Enqueue(msg.Data);
+        }
+
+        private void UdpCallback()
+        {
+            while(true)
+            {
+                try
+                {
+                    IPEndPoint senderIP = null;
+                    byte[] receiveBuffer = udpClient.Receive(ref senderIP);
+
+                    // サイズ１はping pong用
+                    if(receiveBuffer.Length != 1)
+                    {
+                        var receiveMsg = new std_msgs.msg.UInt8MultiArray
+                        {
+                            Data = receiveBuffer
+                        };
+
+                        receiveDataPublisher.Publish(receiveMsg);
+                    }
+
+                    if(sendData.TryDequeue(out var result))
+                    {
+                        udpClient.SendAsync(result, result.Length, senderIP);
+                    }
+                    else
+                    {
+                        byte[] pingData = new byte[1]{0};
+                        udpClient.SendAsync(pingData, pingData.Length, senderIP);
+                    }
+
+                    var status_msg = new std_msgs.msg.Bool
+                    {
+                        Data = true
+                    };
+                    statusPublisher.Publish(status_msg);
+                }
+                catch (SocketException)
+                {
+                    // Debug.LogWarning($"受信エラー：{e}");
+                    var status_msg = new std_msgs.msg.Bool
+                    {
+                        Data = false
+                    };
+                    statusPublisher.Publish(status_msg);
+                }
             }
         }
     }
-}
+}// end of namespace
