@@ -50,6 +50,26 @@ namespace HKDT.Auto.Control
             lpfAlpha = 0.0;
         }
 
+        public PID()
+        {
+            pGain = 0.0;
+            iGain = 0.0;
+            dGain = 0.0;
+
+            integralMax = 1000.0;
+
+            minOutput = 1000.0;
+            maxOutput = 1000.0;
+
+            integralValue = 0.0;
+            prevMeasurement = 0.0;
+            prevProp = 0.0;
+            lowPathFiltered_D = 0.0;
+
+            enable_IntegralReset = false;
+            lpfAlpha = 0.0;
+        }
+
         /// <summary>
         /// 符号反転時の積分項リセットを有効化できる。trueで有効化します
         /// </summary>
