@@ -81,6 +81,7 @@
     <Compile Include="Assets/HKDT/Auto/Sensing/M5StackBridge.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/Time/ROS2TimeSource.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/Time/ITimeSource.cs" />
+    <Compile Include="Assets/HKDT/Auto/Control/PositionController.cs" />
     <Compile Include="Assets/HKDT/Auto/Example/PathCreateExample.cs" />
     <Compile Include="Assets/HKDT/Simulation/Robot/OmniData/Scripts/Robot.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/Sensor.cs" />
