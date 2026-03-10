@@ -21,6 +21,9 @@ namespace HKDT.Connection
         private int readTimeout = 10;
         private int writeTimeout = 10;
 
+        private bool onlyWrite;
+        private bool onlyRead;
+
         // シリアルポート
         private SerialPort serialPort;
         // 受信を行うスレッド
@@ -35,12 +38,15 @@ namespace HKDT.Connection
 
         ConcurrentQueue<byte[]> writeData;
 
-        public FastSerial(string port_name="/dev/ttyACM0", int baud_rate=115200, int read_timeout=10, int write_timeout=10)
+        public FastSerial(string port_name, int baud_rate, int read_timeout=10, int write_timeout=10, bool only_write=false, bool only_read=false)
         {
             portName = port_name;
             baudRate = baud_rate;
             readTimeout = read_timeout;
             writeTimeout = write_timeout;
+
+            onlyRead = only_read;
+            onlyWrite = only_write;
         }
 
         /// <summary>
@@ -78,7 +84,18 @@ namespace HKDT.Connection
 
                 serialPort.Open();
                 
-                readThread = new Thread(SerialCallback);
+                if(onlyRead)
+                {
+                    readThread = new Thread(OnlyReadCallback);
+                }
+                else if(onlyWrite)
+                {
+                    readThread = new Thread(OnlyWriteCallback);
+                }
+                else
+                {
+                    readThread = new Thread(SerialCallback);
+                }
                 readThread.Start();
 
                 writeData = new();
@@ -128,6 +145,11 @@ namespace HKDT.Connection
                         {
                             serialPort.Write(write_buffer, 0, write_buffer.Length);
                         }
+                        else
+                        {
+                            byte[] pingData = new byte[1]{0};
+                            serialPort.Write(pingData, 0, 1);
+                        }
 
                         var status_msg = new std_msgs.msg.Bool
                         {
@@ -135,6 +157,98 @@ namespace HKDT.Connection
                         };
                         statusPublisher.Publish(status_msg);
                     }
+                }
+                catch(TimeoutException)
+                {
+                    // Timeout時はなにもしない
+                    // Debug.Log($"[{nodeName}] たいむあうと〜");
+                    var status_msg = new std_msgs.msg.Bool
+                    {
+                        Data = false
+                    };
+                    statusPublisher.Publish(status_msg);
+                }
+                catch (Exception)
+                {
+                    var status_msg = new std_msgs.msg.Bool
+                    {
+                        Data = false
+                    };
+                    statusPublisher.Publish(status_msg);
+                }
+            }
+        }
+
+        private void OnlyReadCallback()
+        {
+            while(true)
+            {
+                try
+                {
+                    byte[] buffer = new byte[256];
+                    int readSize = serialPort.Read(buffer, 0, 256);
+
+                    if(readSize > 0)
+                    {
+                        byte[] read_data = new byte[readSize];
+                        Array.Copy(buffer, read_data, readSize);
+
+                        var read_data_msg = new std_msgs.msg.UInt8MultiArray
+                        {
+                            Data = read_data
+                        };
+
+                        readDataPublisher.Publish(read_data_msg);
+
+                        var status_msg = new std_msgs.msg.Bool
+                        {
+                            Data = true
+                        };
+                        statusPublisher.Publish(status_msg);
+                    }
+                }
+                catch(TimeoutException)
+                {
+                    // Timeout時はなにもしない
+                    // Debug.Log($"[{nodeName}] たいむあうと〜");
+                    var status_msg = new std_msgs.msg.Bool
+                    {
+                        Data = false
+                    };
+                    statusPublisher.Publish(status_msg);
+                }
+                catch (Exception)
+                {
+                    var status_msg = new std_msgs.msg.Bool
+                    {
+                        Data = false
+                    };
+                    statusPublisher.Publish(status_msg);
+                }
+            }
+        }
+
+        private void OnlyWriteCallback()
+        {
+            while(true)
+            {
+                try
+                {
+                    if(writeData.TryDequeue(out var write_buffer))
+                    {
+                        serialPort.Write(write_buffer, 0, write_buffer.Length);
+                    }
+                    else
+                    {
+                        byte[] pingData = new byte[1]{0};
+                        serialPort.Write(pingData, 0, 1);
+                    }
+
+                    var status_msg = new std_msgs.msg.Bool
+                    {
+                        Data = true
+                    };
+                    statusPublisher.Publish(status_msg);
                 }
                 catch(TimeoutException)
                 {
