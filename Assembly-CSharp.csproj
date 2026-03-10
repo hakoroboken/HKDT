@@ -76,6 +76,7 @@
     <Compile Include="Assets/HKDT/Auto/Algorithm/SpatialHash.cs" />
     <Compile Include="Assets/HKDT/Auto/Example/PurePursuitExample.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/ROS2ForUnity.cs" />
+    <Compile Include="Assets/HKDT/Auto/Control/PID.cs" />
     <Compile Include="Assets/HKDT/Simulation/Robot/DifferentialDrive/DifferentialDriver.cs" />
     <Compile Include="Assets/HKDT/Auto/Sensing/M5StackBridge.cs" />
     <Compile Include="Assets/Ros2ForUnity/Scripts/Time/ROS2TimeSource.cs" />
